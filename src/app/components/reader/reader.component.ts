@@ -14,13 +14,16 @@ export class ReaderComponent implements OnInit, OnDestroy {
   file?: File;
   certificats!: CertifOwner;
   uploadFlag: boolean = false;
+  loading = false;
   subs!: Subscription;
+  message$!: Observable<string>;
   constructor(private readService: ReaderService) { }
 
   ngOnInit(): void {
     this.form = new FormGroup({
       file: new FormControl()
-    })
+    });
+    this.message$ = this.readService.errormessage;
   }
 
   readFile(event: Event) {
@@ -28,12 +31,17 @@ export class ReaderComponent implements OnInit, OnDestroy {
     const filesList = target.files as FileList;
     this.file = filesList[0];
     this.readService.readFile(this.file);
-    if(this.file){
-      this.uploadFlag = true;
-      this.subs = this.readService.parsedArray.subscribe((el)=>{
-        this.certificats = el[el.length-1];
-      });
-    }
+    this.loading = true;
+    setTimeout(() =>{
+      if(this.file){
+        this.loading = false;
+        this.uploadFlag = true;
+        this.subs = this.readService.parsedArray.subscribe((el)=>{
+          this.certificats = el[el.length-1];
+        });
+      }
+    }, 1000)
+
   }
 
   ngOnDestroy() {

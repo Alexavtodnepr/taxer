@@ -2,9 +2,9 @@
   <label for="reader">Додайте документ в це поле...</label>
   <input formControlName='file' (change)="readFile($event)" type="file" id="reader" class="reader">
 </form>
-
+<div class="loading" *ngIf="loading">Loading...</div>
 <div class="certif-block" *ngIf="uploadFlag">
-  Ви успішно завантажили цей сертифікат... <br><br><br><br>
+  <div class="errorblock">{{message$ | async}}</div><br><br><br><br>
   <div class="info">Common Name: {{certificats.commonName}}</div>
   <div class="info">Issuer CN: {{certificats.issuerCN}}</div>
   <div class="info">Valid From: {{certificats.validFrom | date: 'mediumDate'}}</div>

@@ -1,8 +1,9 @@
 import {Injectable, OnInit} from '@angular/core';
 // @ts-ignore
 import ASN1 from '@lapo/asn1js';
-import {BehaviorSubject, Observable, Subject, take, throwError} from "rxjs";
+import {BehaviorSubject, catchError, map, Observable, of, Subject, take, throwError} from "rxjs";
 import {CertifOwner} from "../models/certif-owner";
+import {error} from "@angular/compiler/src/util";
 @Injectable({
   providedIn: 'root'
 })
@@ -11,6 +12,8 @@ export class ReaderService implements OnInit{
   reader: FileReader = new FileReader;
   chosenCertif: Subject<CertifOwner> = new Subject;
   chosenCertifStream$ = this.chosenCertif.asObservable();
+  successString: string = 'Ви успішно завантажили цей сертифікат...';
+  errormessage: BehaviorSubject<string> = new BehaviorSubject<string>(this.successString);
   parsedArray: BehaviorSubject<CertifOwner[]> = new BehaviorSubject<CertifOwner[]>(this.getParsedCertifLocalData() ?? []);
   constructor() {}
 
@@ -25,11 +28,15 @@ export class ReaderService implements OnInit{
   readFile(file: File): void{
     this.reader.readAsBinaryString(file);
     this.reader.onloadend = ()=>{
-      const result = ASN1.decode(this.reader.result);
-      if (result.typeName() !== 'SEQUENCE') {
-        throw 'Неправильна структура конверта сертифіката (очікується SEQUENCE)';
-      }else{
-        this.parseCertif(result);
+     try{
+          const result = ASN1.decode(this.reader.result);
+          if (result.typeName() !== 'SEQUENCE') {
+            this.createError('Неправильна структура конверта сертифіката (очікується SEQUENCE)');
+          }else{
+            this.parseCertif(result);
+          }
+      }catch(err:any){
+        this.createError('Сертифікат зіпсований з причини  :  '  + err);
       }
     }
   }
@@ -43,12 +50,10 @@ export class ReaderService implements OnInit{
         validTill: certif.sub[0].sub[4].sub[1].content(),
       }
       const newParsedArray = [...val, info];
-      this.parsedArray.next(newParsedArray);
       this.setParsedCertificatesLocal(newParsedArray);
-    },
-      (thrownError)=>{
-      console.log(thrownError, 'Error');
-      });
+      this.createError(this.successString);
+      return this.parsedArray.next(newParsedArray);
+    });
   }
 
   setParsedCertificatesLocal(readCertificats:any): void{
@@ -70,5 +75,9 @@ export class ReaderService implements OnInit{
 
   chosedCertif(certif: any){
     this.chosenCertif.next(certif);
+  }
+
+  createError(errorString:string){
+    this.errormessage.next(errorString);
   }
 }
