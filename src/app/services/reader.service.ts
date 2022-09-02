@@ -1,9 +1,8 @@
 import {Injectable, OnInit} from '@angular/core';
 // @ts-ignore
 import ASN1 from '@lapo/asn1js';
-import {BehaviorSubject, catchError, map, Observable, of, Subject, take, throwError} from "rxjs";
+import {BehaviorSubject, Subject, take} from "rxjs";
 import {CertifOwner} from "../models/certif-owner";
-import {error} from "@angular/compiler/src/util";
 @Injectable({
   providedIn: 'root'
 })
@@ -43,16 +42,30 @@ export class ReaderService implements OnInit{
 
   parseCertif(certif:any): void{
     this.parsedArray.pipe(take(1)).subscribe((val)=>{
+      console.log(val)
       const info = {
         commonName: certif.sub[0].sub[5].sub[1].sub[0].sub[1].content(),
         issuerCN: certif.sub[0].sub[3].sub[2].sub[0].sub[1].content(),
         validFrom: certif.sub[0].sub[4].sub[0].content(),
         validTill: certif.sub[0].sub[4].sub[1].content(),
+        id: certif.sub[0].sub[3].sub[3].sub[0].sub[1].content()
       }
-      const newParsedArray = [...val, info];
-      this.setParsedCertificatesLocal(newParsedArray);
-      this.createError(this.successString);
-      return this.parsedArray.next(newParsedArray);
+
+      let newParsedArray: any = [];
+      val.forEach(el=>{
+        if(el.id == info.id){
+          this.createError('Такой сертификат уже есть')
+        }else{
+          newParsedArray.push(el);
+          this.createError(this.successString);
+        }
+      })
+          newParsedArray.push(info);
+          this.setParsedCertificatesLocal(newParsedArray);
+          return this.parsedArray.next(newParsedArray);
+
+
+
     });
   }
 
@@ -73,11 +86,11 @@ export class ReaderService implements OnInit{
   //   return JSON.parse(localStorage.getItem('certificatesArray')!);
   // }
 
-  chosedCertif(certif: any){
+  chosedCertif(certif: any):void{
     this.chosenCertif.next(certif);
   }
 
-  createError(errorString:string){
+  createError(errorString:string):void{
     this.errormessage.next(errorString);
   }
 }

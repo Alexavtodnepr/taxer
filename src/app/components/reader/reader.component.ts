@@ -1,5 +1,5 @@
-import {AfterViewInit, Component, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {FormControl, FormGroup} from "@angular/forms";
 import {ReaderService} from "../../services/reader.service";
 import {CertifOwner} from "../../models/certif-owner";
 import {Observable, Subscription} from "rxjs";
@@ -41,7 +41,6 @@ export class ReaderComponent implements OnInit, OnDestroy {
         });
       }
     }, 1000)
-
   }
 
   ngOnDestroy() {

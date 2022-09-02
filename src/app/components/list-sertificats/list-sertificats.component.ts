@@ -20,7 +20,7 @@ export class ListSertificatsComponent implements OnInit {
     })
   }
 
-  choosedItem(item: CertifOwner){
+  choosedItem(item: CertifOwner):void{
     this.readServ.chosedCertif(item);
   }
 
