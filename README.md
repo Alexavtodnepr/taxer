@@ -1,4 +1,4 @@
-Link on project is here...
+Link on project is here
 
 https://stackblitz.com/github/Alexavtodnepr/taxer/
 
