@@ -1,0 +1,15 @@
+<div class="wrapper">
+  <div class="side-left">
+    <app-list-sertificats></app-list-sertificats>
+    <button class="toggle" (click)="read=!read">{{read?'Скасувати':'Додати'}}</button>
+  </div>
+  <div class="side-rigth">
+      <app-info *ngIf="!read"></app-info>
+      <app-reader *ngIf="read"></app-reader>
+  </div>
+</div>
+
+
+
+
+

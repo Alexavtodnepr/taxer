@@ -1,0 +1,13 @@
+<div class="wrapper-info">
+  <div class="certif-block" *ngIf="certificats">
+    <div class="info">Common Name: {{certificats.commonName}}</div>
+    <div class="info">Issuer CN: {{certificats.issuerCN}}</div>
+    <div class="info">Valid From: {{certificats.validFrom | date: 'mediumDate'}}</div>
+    <div class="info">Valid Till: {{certificats.validTill | date: 'mediumDate'}}</div>
+  </div>
+  <div class="instead" *ngIf="!certificats">
+    Виберіть сертифікат щоб переглянути інформацію...
+  </div>
+</div>
+
+
