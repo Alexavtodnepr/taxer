@@ -11,6 +11,7 @@ import {Observable} from "rxjs";
 export class ListSertificatsComponent implements OnInit {
   emptyArr: any;
   items$!: Observable<CertifOwner[]>;
+  activeItem!: any;
   constructor(private readServ: ReaderService) { }
 
   ngOnInit(): void {
@@ -21,6 +22,7 @@ export class ListSertificatsComponent implements OnInit {
   }
 
   choosedItem(item: CertifOwner):void{
+    this.activeItem = item;
     this.readServ.chosedCertif(item);
   }
 

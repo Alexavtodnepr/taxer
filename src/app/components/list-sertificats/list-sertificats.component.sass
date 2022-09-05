@@ -14,3 +14,24 @@
     cursor: pointer
     &:hover
       background: #d2d2d2
+.active
+  position: relative
+  background: #8080808c
+  transform: translateX(5px)
+  &::after
+    position: absolute
+    content: ''
+    width: 0
+    height: 0
+    border-style: solid
+    border-width: 10px 0 10px 15px
+    border-color: transparent transparent transparent black
+    right: 5px
+
+@media screen and (max-width: 560px)
+  .items-block
+    width: 100%
+    max-width: 540px
+  .item
+    width: 100%
+    max-width: 470px
