@@ -1,5 +1,5 @@
 <div class="items-block">
-  <div class="item" [class.active]="item == activeItem" (click)="choosedItem(item)" *ngFor="let item of items$ | async">
+  <div class="item" [class.active]="!read?item == activeItem:''" (click)="choosedItem(item)" *ngFor="let item of items$ | async">
     {{item.commonName}}
   </div>
   <div class="empty" *ngIf="emptyArr.length == 0">В системі ще немає сертифікатів... Але ви можете завантажити...</div>

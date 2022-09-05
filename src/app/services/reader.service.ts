@@ -54,7 +54,7 @@ export class ReaderService implements OnInit{
       let newParsedArray: any = [];
       val.forEach(el=>{
         if(el.id == info.id){
-          this.createError('Такой сертификат уже есть')
+          this.createError('Такий сертификат же є в системі...')
         }else{
           newParsedArray.push(el);
           this.createError(this.successString);

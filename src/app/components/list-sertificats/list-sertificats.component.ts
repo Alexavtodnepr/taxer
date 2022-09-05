@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ReaderService} from "../../services/reader.service";
 import {CertifOwner} from "../../models/certif-owner";
 import {Observable} from "rxjs";
@@ -9,6 +9,7 @@ import {Observable} from "rxjs";
   styleUrls: ['./list-sertificats.component.sass']
 })
 export class ListSertificatsComponent implements OnInit {
+  @Input() read: boolean = false;
   emptyArr: any;
   items$!: Observable<CertifOwner[]>;
   activeItem!: any;
@@ -22,7 +23,9 @@ export class ListSertificatsComponent implements OnInit {
   }
 
   choosedItem(item: CertifOwner):void{
-    this.activeItem = item;
+    if(!this.read){
+      this.activeItem = item;
+    }
     this.readServ.chosedCertif(item);
   }
 
